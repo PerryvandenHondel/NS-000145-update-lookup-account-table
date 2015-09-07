@@ -70,7 +70,7 @@ const
 	FLD_LA_NB = 			'account_netbios';
 	FLD_LA_OID = 			'account_object_id';
 	FLD_LA_UN = 			'account_username';
-	FLD_LA_ACTIVE = 		'is_active';
+	FLD_LA_ISOBSO = 		'is_obsolete';
 	FLD_LA_RCD = 			'rcd';
 	FLD_LA_RLU = 			'rlu';
 
@@ -237,7 +237,7 @@ begin
 	qi := qi + FLD_LA_NB + '=' + FixStr(strDomainNetbios + '\\' + strSam) + ',';
 	qi := qi + FLD_LA_OID + '=' + FixStr(strObjectId) + ',';
 	qi := qi + FLD_LA_UN + '=' + FixStr(strSam) + ',';
-	qi := qi + FLD_LA_ACTIVE + '=' + FixNum('1') + ',';
+	qi := qi + FLD_LA_ISOBSO + '=' + FixNum('0') + ',';
 	qi := qi + FLD_LA_RCD + '=' + FixStr(strRcd) + ',';			// Record Creation Date
 	qi := qi + FLD_LA_RLU + '=' + FixStr(strRlu) + ';';			// Record Last Update
 	
@@ -278,7 +278,7 @@ begin
 	qu := qu + FLD_LA_UPN + '=' + FixStr(LowerCase(strUpn)) + ',';
 	qu := qu + FLD_LA_NB + '=' + FixStr(strDomainNetbios + '\\' + strSam) + ',';
 	qu := qu + FLD_LA_UN + '=' + FixStr(strSam) + ',';
-	qu := qu + FLD_LA_ACTIVE + '=' + FixNum('1') + ',';
+	qu := qu + FLD_LA_ISOBSO + '=' + FixNum('0') + ',';
 	qu := qu + FLD_LA_RLU + '=' + FixStr(strRlu) + ' ';
 	qu := qu + 'WHERE ' + FLD_LA_OID + '=' + FixStr(strObjectId) + ';';
 	
@@ -313,7 +313,8 @@ var
 begin
 	qu := 'UPDATE ' + TBL_LA + ' ';
 	qu := qu + 'SET ';
-	qu := qu + FLD_LA_ACTIVE + '=0 ';
+	// Change the  Obsolete field to 1 when the field is not change during this batch.
+	qu := qu + FLD_LA_ISOBSO + '=1 ';
 	qu := qu + 'WHERE ' + FLD_LA_DOM + '=' + FixStr(strDomainNetbios) + ' ';
 	qu := qu + 'AND ' + FLD_LA_RLU + '<' + FixStr(strLastRecordUpdated) + ';';
 	
